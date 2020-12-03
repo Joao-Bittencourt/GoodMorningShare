@@ -1,6 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:good_morning_share/FavoritePage.dart';
 import 'package:http/http.dart' as http;
+
+import 'model/DatabaseHelper.dart';
+import 'model/favoritos.dart';
 
 void main() {
   runApp(GoodMorningShareApp());
@@ -17,16 +21,15 @@ class GoodMorningShareApp extends StatelessWidget {
             backgroundColor: Colors.green,
             actions: <Widget>[
               IconButton(
-                icon: Icon(Icons.star_rate),
-                tooltip: 'Search',
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => GalleryFavoritePage(),
-                    ),
-                  );
-                },
-              ),
+                  icon: Icon(Icons.star_rate),
+                  tooltip: 'Search pagina inicial',
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => GalleryPage('100'),
+                      ),
+                    );
+                  }),
             ],
           ),
           body: ImagesGalery(),
@@ -43,6 +46,18 @@ class GalleryPage extends StatelessWidget {
   final String id;
   List<String> _favoriteId = new List();
   GalleryPage(this.id);
+  _postApi() async {
+    DatabaseHelper db = DatabaseHelper();
+
+    List<Favoritos> Favorito = List<Favoritos>();
+
+    Favoritos f = Favoritos(int.tryParse(this.id), this.id);
+    db.insertFavorito(f);
+    db.getFavoritos().then((lista) {
+      print(lista);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,6 +70,7 @@ class GalleryPage extends StatelessWidget {
             tooltip: 'Search',
             onPressed: () {
               _favoriteId.add(this.id);
+              _postApi();
               // favoriteId.add(int.tryParse(this.id), this.id);
             },
           ),
@@ -76,7 +92,7 @@ class GalleryFavoritePage extends StatelessWidget {
     Widget build(BuildContext context) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Good Morning share detail'),
+          title: Text('favorite Page'),
           backgroundColor: Colors.green,
           actions: <Widget>[
             IconButton(
