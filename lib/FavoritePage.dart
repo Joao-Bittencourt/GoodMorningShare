@@ -5,31 +5,25 @@ import 'package:good_morning_share/model/DatabaseHelper.dart';
 
 import 'model/favoritos.dart';
 
-class FavoritePage extends StatefulWidget {
-  @override
-  _FavoritePageState createState() => _FavoritePageState();
-}
-
-class _FavoritePageState extends State<FavoritePage> {
-  DatabaseHelper db = DatabaseHelper();
-
-  List<Favoritos> Favorito = List<Favoritos>();
-
-  @override
-  void initState() {
-    super.initState();
-
-    Favoritos f = Favoritos(1, 'id1');
-    db.insertFavorito(f);
-    db.getFavoritos().then((lista) {
-      print(lista);
-    });
-  }
-
+class FavoritePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text('atention'),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Favoritos"),
+        backgroundColor: Colors.green,
+      ),
+      // body: Center(
+      //   child: ElevatedButton(
+      //     onPressed: () {
+      //       Navigator.pop(context);
+      //     },
+      //     child: Text('Go back!'),
+      //   ),
+      // ),
+      body: Center(
+        child: Image.network('https://picsum.photos/id/100/600/600'),
+      ),
     );
   }
 }

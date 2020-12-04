@@ -6,10 +6,6 @@ import 'package:http/http.dart' as http;
 import 'model/DatabaseHelper.dart';
 import 'model/favoritos.dart';
 
-void main() {
-  runApp(GoodMorningShareApp());
-}
-
 class GoodMorningShareApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -19,29 +15,28 @@ class GoodMorningShareApp extends StatelessWidget {
           appBar: AppBar(
             title: Text('Good Morning share'),
             backgroundColor: Colors.green,
-            actions: <Widget>[
-              IconButton(
-                  icon: Icon(Icons.star_rate),
-                  tooltip: 'Search pagina inicial',
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => GalleryPage('100'),
-                      ),
-                    );
-                  }),
-            ],
           ),
           body: ImagesGalery(),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return FavoritePage();
+              }));
+            },
+            backgroundColor: Colors.green,
+            child: const Icon(Icons.star),
+          ),
         ));
   }
 }
 
+//classe principal que carrega e monta as imagens
 class ImagesGalery extends StatefulWidget {
   @override
   _ImagesGaleryState createState() => _ImagesGaleryState();
 }
 
+// Pagina quando clica para abrir
 class GalleryPage extends StatelessWidget {
   final String id;
   List<String> _favoriteId = new List();
@@ -84,39 +79,7 @@ class GalleryPage extends StatelessWidget {
   }
 }
 
-class GalleryFavoritePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    // GalleryFavoritePage(this.favoriteId);
-    @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('favorite Page'),
-          backgroundColor: Colors.green,
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.star),
-              tooltip: 'Search',
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => GalleryFavoritePage(),
-                  ),
-                );
-              },
-            )
-          ],
-        ),
-        backgroundColor: Colors.green,
-        body: Center(
-          child: Image.network('https://picsum.photos/id/100/600/600'),
-        ),
-      );
-    }
-  }
-}
-
+//Pagina principal que mota as imagens
 class _ImagesGaleryState extends State<ImagesGalery> {
   bool loading;
   List<String> ids;
@@ -187,4 +150,10 @@ class _ImagesGaleryState extends State<ImagesGalery> {
       itemCount: ids.length,
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: GoodMorningShareApp(),
+  ));
 }
