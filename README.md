@@ -3,5 +3,5 @@
 awesome
 
 
-[![Demo CountPages alpha](https://gifs.com/gif/goodmorningshare-wVGj4M)](https://www.youtube.com/watch?v=7-83SIHY1kE&feature)
+[![goodmorningShare](https://j.gifs.com/wVGj4M.gif)](https://www.youtube.com/watch?v=7-83SIHY1kE&feature)
 
