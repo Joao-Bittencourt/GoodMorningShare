@@ -4,6 +4,7 @@ import 'package:good_morning_share/FavoritePage.dart';
 import 'package:http/http.dart' as http;
 
 import 'model/DatabaseHelper.dart';
+import 'model/dbAny.dart';
 import 'model/favoritos.dart';
 
 class GoodMorningShareApp extends StatelessWidget {
@@ -46,10 +47,10 @@ class GalleryPage extends StatelessWidget {
 
     List<Favoritos> Favorito = List<Favoritos>();
 
-    Favoritos f = Favoritos(int.tryParse(this.id), this.id);
-    db.insertFavorito(f);
-    db.getFavoritos().then((lista) {
-      print(lista);
+    Favoritos f = Favoritos(null, "na");
+    db.create(f);
+    db.dogs().then((lista) {
+      print(lista.getRange(0, lista.length));
     });
   }
 
@@ -154,6 +155,7 @@ class _ImagesGaleryState extends State<ImagesGalery> {
 
 void main() {
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     home: GoodMorningShareApp(),
   ));
 }

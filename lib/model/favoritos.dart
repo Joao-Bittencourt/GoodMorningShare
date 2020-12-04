@@ -1,16 +1,16 @@
 class Favoritos {
   int id;
-  String name;
+  String nome;
 
-  Favoritos(this.id, this.name);
+  Favoritos(this.id, this.nome);
 
   Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{'id': id, 'nome': name};
+    var map = <String, dynamic>{'id': id, 'nome': nome};
     return map;
   }
 
   Favoritos.fromMap(Map<String, dynamic> map) {
     id = map['id'];
-    name = map['nome'];
+    nome = map['nome'];
   }
 }

@@ -56,6 +56,20 @@ class DatabaseHelper {
     return resultado;
   }
 
+  Future create(Favoritos model) async {
+    try {
+      final Database db = await this.database;
+
+      await db.insert(
+        favoritosTable,
+        model.toMap(),
+      );
+    } catch (ex) {
+      print(ex);
+      return;
+    }
+  }
+
 //retorna um contato pelo id
   Future<Favoritos> getFavorito(int id) async {
     Database db = await this.database;
@@ -97,7 +111,24 @@ class DatabaseHelper {
     List<Favoritos> lista = resultado.isNotEmpty
         ? resultado.map((c) => Favoritos.fromMap(c)).toList()
         : [];
+
     return lista;
+  }
+
+  Future<List<Favoritos>> dogs() async {
+    // Get a reference to the database.
+    final Database db = await this.database;
+
+    // Query the table for all The Dogs.
+    final List<Map<String, dynamic>> maps = await db.query(favoritosTable);
+
+    // Convert the List<Map<String, dynamic> into a List<Dog>.
+    return List.generate(
+      maps.length,
+      (i) {
+        return Favoritos.fromMap(maps[i]);
+      },
+    );
   }
 
 //Obtem o número de objetos contato no banco de dados
@@ -113,5 +144,11 @@ class DatabaseHelper {
   Future close() async {
     Database db = await this.database;
     db.close();
+  }
+
+  Future<List<Favoritos>> getAll() async {
+    Database db = await this.database;
+    List<Map<String, dynamic>> resultado = await db.query(favoritosTable);
+    return resultado.map((map) => Favoritos.fromMap(map));
   }
 }
