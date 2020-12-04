@@ -115,16 +115,24 @@ class _ImagesGaleryState extends State<ImagesGalery> {
 
   void _loadFavoriteImages() async {
     final response = await http.get('https://picsum.photos/v2/list');
-    final json = jsonDecode(response.body);
-    List<String> _favoriteId = [];
 
-    for (var image in json) {
-      _favoriteId.add(image['id']);
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      List<String> _favoriteId = [];
+
+      for (var image in json) {
+        _favoriteId.add(image['id']);
+      }
+      setState(() {
+        loading = false;
+        favoriteId = _favoriteId;
+      });
+    } else {
+      setState(() {
+        loading = false;
+        favoriteId = [];
+      });
     }
-    setState(() {
-      loading = false;
-      favoriteId = _favoriteId;
-    });
   }
 
   @override
@@ -134,6 +142,10 @@ class _ImagesGaleryState extends State<ImagesGalery> {
         child: CircularProgressIndicator(),
       );
     }
+    if (ids.isEmpty) {
+      return emptyIds();
+    }
+
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
@@ -149,6 +161,18 @@ class _ImagesGaleryState extends State<ImagesGalery> {
         child: Image.network('https://picsum.photos/id/${ids[index]}/300/300'),
       ),
       itemCount: ids.length,
+    );
+  }
+
+  emptyIds() {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Favoritos"),
+        backgroundColor: Colors.green,
+      ),
+      body: Center(
+        child: Text('Não possui imagens favoritas!'),
+      ),
     );
   }
 }

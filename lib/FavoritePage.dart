@@ -13,12 +13,20 @@ class FavoritePage extends StatelessWidget {
 
     List<Favoritos> Favorito = List<Favoritos>();
 
-    Favoritos f = Favoritos(null, "na");
-    db.create(f);
-    db.dogs().then((lista) {
-      this.Favorito = lista;
-    });
-    print(Favorito.cast());
+    Favoritos f = Favoritos(100, "na");
+    Favoritos f1 = Favoritos(10, "na1");
+    Favoritos f2 = Favoritos(101, "na2");
+    Favoritos f3 = Favoritos(11, "na3");
+    // db.create(f);
+    // db.dogs().then((lista) {
+    //   this.Favorito = lista;
+    // });
+    // print(Favorito.cast());
+    Favorito.add(f);
+    Favorito.add(f1);
+    Favorito.add(f2);
+    Favorito.add(f3);
+    print(Favorito[1].nome);
   }
 
   @override
@@ -28,6 +36,7 @@ class FavoritePage extends StatelessWidget {
         title: Text("Favoritos"),
         backgroundColor: Colors.green,
       ),
+      // body: listaFav(),
       body: ImagesGalery(),
     );
   }
@@ -35,19 +44,21 @@ class FavoritePage extends StatelessWidget {
   listaFav() {
     _postApi();
 
-    return ListView.builder(
-      itemCount: 10,
-      itemBuilder: (context, index) {
-        return ListTile(
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(
-                'https://picsum.photos/id/${Favorito[index].nome}/600/600'),
-          ),
-          title: Text(Favorito[index].nome,
-              style: TextStyle(fontSize: 20.0, color: Colors.black)),
-          subtitle: Text(Favorito[index].nome),
-        );
-      },
+    return MaterialApp(
+      home: Scaffold(
+        body: GridView.count(
+          // Create a grid with 2 columns. If you change the scrollDirection to
+          // horizontal, this produces 2 rows.
+          crossAxisCount: 4,
+          // Generate 100 widgets that display their index in the List.
+          children: List.generate(100, (index) {
+            return Center(
+              child: Image.network(
+                  'https://picsum.photos/id/${Favorito[index].id}/300/300'),
+            );
+          }),
+        ),
+      ),
     );
   }
 }
