@@ -42,18 +42,12 @@ class GalleryPage extends StatelessWidget {
   final String id;
   List<String> _favoriteId = new List();
   GalleryPage(this.id);
-  _postApi([String id]) async {
+  _postApi([int id]) async {
     DatabaseHelper db = DatabaseHelper();
 
-    // List<Favoritos> Favorito = List<Favoritos>();
+    Favoritos a = Favoritos(id, 'imagem $id');
 
-    // Favoritos f = Favoritos(null, "na");
-    // db.getFavoritos().then((value) {
-    //   print(value);
-    // });
-
-    // db.insertFavorito(f);
-    // Future<Favoritos> a = db.getFavorito(f.id);
+    db.insertFavorito(a);
 
     // print(a);
   }
@@ -70,7 +64,7 @@ class GalleryPage extends StatelessWidget {
             tooltip: 'Search',
             onPressed: () {
               _favoriteId.add(this.id);
-              _postApi(this.id);
+              _postApi(int.tryParse(this.id));
               // favoriteId.add(int.tryParse(this.id), this.id);
             },
           ),
