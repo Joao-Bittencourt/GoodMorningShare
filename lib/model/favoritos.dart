@@ -13,4 +13,9 @@ class Favoritos {
     id = map['id'];
     nome = map['nome'];
   }
+
+  @override
+  String toString() {
+    return "Favoritos => (id: $id, nome:$nome)";
+  }
 }

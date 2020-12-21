@@ -42,16 +42,20 @@ class GalleryPage extends StatelessWidget {
   final String id;
   List<String> _favoriteId = new List();
   GalleryPage(this.id);
-  _postApi() async {
+  _postApi([String id]) async {
     DatabaseHelper db = DatabaseHelper();
 
-    List<Favoritos> Favorito = List<Favoritos>();
+    // List<Favoritos> Favorito = List<Favoritos>();
 
-    Favoritos f = Favoritos(null, "na");
-    db.create(f);
-    db.dogs().then((lista) {
-      print(lista.getRange(0, lista.length));
-    });
+    // Favoritos f = Favoritos(null, "na");
+    // db.getFavoritos().then((value) {
+    //   print(value);
+    // });
+
+    // db.insertFavorito(f);
+    // Future<Favoritos> a = db.getFavorito(f.id);
+
+    // print(a);
   }
 
   @override
@@ -66,7 +70,7 @@ class GalleryPage extends StatelessWidget {
             tooltip: 'Search',
             onPressed: () {
               _favoriteId.add(this.id);
-              _postApi();
+              _postApi(this.id);
               // favoriteId.add(int.tryParse(this.id), this.id);
             },
           ),
@@ -142,9 +146,6 @@ class _ImagesGaleryState extends State<ImagesGalery> {
         child: CircularProgressIndicator(),
       );
     }
-    if (ids.isEmpty) {
-      return emptyIds();
-    }
 
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -161,18 +162,6 @@ class _ImagesGaleryState extends State<ImagesGalery> {
         child: Image.network('https://picsum.photos/id/${ids[index]}/300/300'),
       ),
       itemCount: ids.length,
-    );
-  }
-
-  emptyIds() {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Favoritos"),
-        backgroundColor: Colors.green,
-      ),
-      body: Center(
-        child: Text('Não possui imagens favoritas!'),
-      ),
     );
   }
 }
