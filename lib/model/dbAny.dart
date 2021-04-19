@@ -24,7 +24,9 @@ class dbAny {
 }
 
 class dbDeny {
+  int id;
   String name;
+
   dbDeny(this.name);
 
   Map<String, dynamic> toMap() {
@@ -34,6 +36,12 @@ class dbDeny {
   }
 
   dbDeny.fromMap(Map<String, dynamic> map) {
+    id = map['id'];
     name = map['name'];
+  }
+
+  @override
+  String toString() {
+    return "any => (name:$name)";
   }
 }

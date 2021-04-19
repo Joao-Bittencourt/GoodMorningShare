@@ -2,9 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:good_morning_share/FavoritePage.dart';
 import 'package:http/http.dart' as http;
-
 import 'model/DatabaseHelper.dart';
-import 'model/dbAny.dart';
 import 'model/favoritos.dart';
 
 class GoodMorningShareApp extends StatelessWidget {
@@ -42,14 +40,28 @@ class GalleryPage extends StatelessWidget {
   final String id;
   List<String> _favoriteId = new List();
   GalleryPage(this.id);
+  Favoritos existFav;
+
+  //@ToDo ver como passar como variavel unica
+  final String serviceUrl = 'https://goodmorningshareapi.herokuapp.com';
+
   _postApi([int id]) async {
     DatabaseHelper db = DatabaseHelper();
+    db.getFavorito(id).then((value) {
+      this.existFav = value;
+      // print(value);
+    });
+    // print(existFav);
+    // print(this.existFav);
 
-    Favoritos a = Favoritos(id, 'imagem $id');
+    if (this.existFav != null) {
+      db.deleteFavorito(this.existFav.id);
+    }
 
-    db.insertFavorito(a);
-
-    // print(a);
+    if (this.existFav == null) {
+      Favoritos a = Favoritos(id, 'imagem $id');
+      db.insertFavorito(a);
+    }
   }
 
   @override
@@ -65,14 +77,15 @@ class GalleryPage extends StatelessWidget {
             onPressed: () {
               _favoriteId.add(this.id);
               _postApi(int.tryParse(this.id));
-              // favoriteId.add(int.tryParse(this.id), this.id);
             },
           ),
         ],
       ),
       backgroundColor: Colors.green,
       body: Center(
-        child: Image.network('https://picsum.photos/id/${id}/600/600'),
+        // child: Image.network('https://picsum.photos/id/${id}/600/600'),
+        child: Image.network(
+            '$id'),
       ),
     );
   }
@@ -83,6 +96,9 @@ class _ImagesGaleryState extends State<ImagesGalery> {
   bool loading;
   List<String> ids;
   List<String> favoriteId;
+
+  //@ToDo ver como passar como variavel unica
+  final String serviceUrl = 'https://goodmorningshareapi.herokuapp.com';
 
   @override
   void initState() {
@@ -98,12 +114,13 @@ class _ImagesGaleryState extends State<ImagesGalery> {
   }
 
   void _loadImagesId() async {
-    final response = await http.get('https://picsum.photos/v2/list');
+    final response =
+        await http.get(this.serviceUrl+'/imagens/listar');
     final json = jsonDecode(response.body);
     List<String> _ids = [];
 
     for (var image in json) {
-      _ids.add(image['id']);
+      _ids.add(image['url'].toString());
     }
     setState(() {
       loading = false;
@@ -112,14 +129,16 @@ class _ImagesGaleryState extends State<ImagesGalery> {
   }
 
   void _loadFavoriteImages() async {
-    final response = await http.get('https://picsum.photos/v2/list');
+    final response =
+        await http.get(this.serviceUrl+'/imagens/listar');
 
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
       List<String> _favoriteId = [];
 
       for (var image in json) {
-        _favoriteId.add(image['id']);
+       
+        _favoriteId.add(image['url'].toString());
       }
       setState(() {
         loading = false;
@@ -153,7 +172,9 @@ class _ImagesGaleryState extends State<ImagesGalery> {
             ),
           );
         },
-        child: Image.network('https://picsum.photos/id/${ids[index]}/300/300'),
+        child: Image.network(
+            
+            '${ids[index]}'),
       ),
       itemCount: ids.length,
     );

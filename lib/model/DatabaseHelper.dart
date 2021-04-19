@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:good_morning_share/model/favoritos.dart';
-// import 'model/favoritos.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -113,22 +112,6 @@ class DatabaseHelper {
         : [];
 
     return lista;
-  }
-
-  Future<List<Favoritos>> dogs() async {
-    // Get a reference to the database.
-    final Database db = await this.database;
-
-    // Query the table for all The Dogs.
-    final List<Map<String, dynamic>> maps = await db.query(favoritosTable);
-
-    // Convert the List<Map<String, dynamic> into a List<Dog>.
-    return List.generate(
-      maps.length,
-      (i) {
-        return Favoritos.fromMap(maps[i]);
-      },
-    );
   }
 
 //Obtem o número de objetos contato no banco de dados
