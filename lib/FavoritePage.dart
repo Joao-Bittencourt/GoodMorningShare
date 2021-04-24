@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:good_morning_share/model/DatabaseHelper.dart';
+import 'GaleryPage.dart';
 import 'model/favoritos.dart';
 
 class FavoritePage extends StatefulWidget {
@@ -13,20 +13,17 @@ class _FavoritePageState extends State<FavoritePage> {
 
   @override
   void initState() {
+    _postFavApi();
     super.initState();
-    _postApi();
   }
 
-  _postApi() async {
+  _postFavApi() async {
     DatabaseHelper db = DatabaseHelper();
 
     db.getFavoritos().then((value) {
       this.setState(() {
         _favorito = value;
       });
-
-      // print(value);
-      // print(this._favorito);
     });
   }
 
@@ -42,19 +39,26 @@ class _FavoritePageState extends State<FavoritePage> {
   }
 
   listaFav() {
-    // _postApi();
-
     if (this._favorito == null) {
       return emptyIds();
     }
-    return GridView.count(
-      crossAxisCount: 2,
-      children: List.generate(this._favorito.length, (index) {
-        return Center(
-          child: Image.network(
-              'https://picsum.photos/id/${this._favorito[index].id}/300/300'),
-        );
-      }),
+
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+      ),
+      itemBuilder: (context, index) => GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => GalleryPage(
+                  this._favorito[index].url, this._favorito[index].id),
+            ),
+          );
+        },
+        child: Image.network('${this._favorito[index].url}'),
+      ),
+      itemCount: this._favorito.length,
     );
   }
 

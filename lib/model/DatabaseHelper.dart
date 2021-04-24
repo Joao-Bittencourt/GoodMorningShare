@@ -1,17 +1,18 @@
 import 'dart:async';
-import 'dart:io';
+
 import 'package:good_morning_share/model/favoritos.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+// import 'package:flutter/services.dart';
+import 'package:path/path.dart';
 
 class DatabaseHelper {
   static DatabaseHelper _databaseHelper;
   static Database _database;
 
 //usada para definir as colunas da tabeala
-  String favoritosTable = 'favoritos';
+  String favoritosTable = 'favoritos_gms';
   String colId = 'id';
-  String colNome = 'nome';
+  String colUrl = 'url';
 
   //construtor nomeado para criar instância da classe
   DatabaseHelper._createInstance();
@@ -31,19 +32,19 @@ class DatabaseHelper {
     return _database;
   }
 
+  void _createDb(Database db, int newVersion) async {
+    await db.execute(
+        'CREATE TABLE $favoritosTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, '
+        '$colUrl TEXT)');
+  }
+
   Future<Database> initializeDatabase() async {
-    Directory directory = await getApplicationDocumentsDirectory();
-    String path = directory.path + 'favoritos.db';
+    var databasesPath = await getDatabasesPath();
+    var path = join(databasesPath, "dbfavoritos_gms.db");
 
     var contatosDatabase =
         await openDatabase(path, version: 1, onCreate: _createDb);
     return contatosDatabase;
-  }
-
-  void _createDb(Database db, int newVersion) async {
-    await db.execute(
-        'CREATE TABLE $favoritosTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, '
-        '$colNome TEXT)');
   }
 
 //Incluir um objeto contato no banco de dados
@@ -69,12 +70,12 @@ class DatabaseHelper {
     }
   }
 
-//retorna um contato pelo id
+//retorna um Favorito pelo id
   Future<Favoritos> getFavorito(int id) async {
     Database db = await this.database;
 
     List<Map> maps = await db.query(favoritosTable,
-        columns: [colId, colNome], where: "$colId = ?", whereArgs: [id]);
+        columns: [colId, colUrl], where: "$colId = ?", whereArgs: [id]);
 
     if (maps.length > 0) {
       return Favoritos.fromMap(maps.first);
@@ -83,7 +84,7 @@ class DatabaseHelper {
     }
   }
 
-  //Atualizar o objeto Contato e salva no banco de dados
+  //Atualizar o objeto Favoritos e salva no banco de dados
   Future<int> updateFavorito(Favoritos contato) async {
     var db = await this.database;
 
@@ -93,12 +94,21 @@ class DatabaseHelper {
     return resultado;
   }
 
-  //Deletar um objeto Contato do banco de dados
+  //Deletar um objeto Favorito do banco de dados
   Future<int> deleteFavorito(int id) async {
     var db = await this.database;
 
     int resultado =
         await db.delete(favoritosTable, where: "$colId = ?", whereArgs: [id]);
+
+    return resultado;
+  }
+
+  // Deleta todos os registro da tabela
+  Future<int> deleteFavoritos() async {
+    var db = await this.database;
+
+    int resultado = await db.delete(favoritosTable, where: "1 = 1");
 
     return resultado;
   }
