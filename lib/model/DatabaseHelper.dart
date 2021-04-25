@@ -9,11 +9,6 @@ class DatabaseHelper {
   static DatabaseHelper _databaseHelper;
   static Database _database;
 
-//usada para definir as colunas da tabeala
-  String favoritosTable = 'favoritos_gms';
-  String colId = 'id';
-  String colUrl = 'url';
-
   //construtor nomeado para criar instância da classe
   DatabaseHelper._createInstance();
 
@@ -31,6 +26,11 @@ class DatabaseHelper {
     }
     return _database;
   }
+
+//usada para definir as colunas da tabeala
+  String favoritosTable = 'favoritos_gms';
+  String colId = 'id';
+  String colUrl = 'url';
 
   void _createDb(Database db, int newVersion) async {
     await db.execute(

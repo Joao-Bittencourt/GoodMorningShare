@@ -39,7 +39,7 @@ class _FavoritePageState extends State<FavoritePage> {
   }
 
   listaFav() {
-    if (this._favorito == null) {
+    if (this._favorito == null || this._favorito.isEmpty) {
       return emptyIds();
     }
 

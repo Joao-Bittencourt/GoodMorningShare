@@ -5,32 +5,28 @@ import 'package:flutter/material.dart';
 import 'model/DatabaseHelper.dart';
 import 'model/favoritos.dart';
 
+// ignore: must_be_immutable
 class GalleryPage extends StatelessWidget {
   int id;
   String url;
 
   GalleryPage(this.url, this.id);
 
-  //@ToDo ver como passar como variavel unica
   String serviceUrl = 'https://goodmorningshareapi.herokuapp.com';
 
   _postApi(String url, int id) async {
-    Favoritos existFav;
     DatabaseHelper db = DatabaseHelper();
 
     db.getFavorito(id).then((value) {
-      Favoritos _existFav = Favoritos(value.id, value.url);
-      existFav = _existFav;
-
-      if (value.id != null) {
+      if (value != null) {
         db.deleteFavorito(value.id);
       }
-    });
 
-    if (existFav == null) {
-      Favoritos a = Favoritos(id, url);
-      db.insertFavorito(a);
-    }
+      if (value == null) {
+        Favoritos a = Favoritos(id, url);
+        db.insertFavorito(a);
+      }
+    });
   }
 
   @override

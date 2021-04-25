@@ -17,7 +17,6 @@ class _ImagesGaleryState extends State<ImagesGalery> {
   List<String> urls;
   List<int> ids;
 
-  //@ToDo ver como passar como variavel unica
   String serviceUrl = 'https://goodmorningshareapi.herokuapp.com';
 
   @override
