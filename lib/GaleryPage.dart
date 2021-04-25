@@ -1,6 +1,7 @@
 // Pagina quando clica para abrir
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 
 import 'model/DatabaseHelper.dart';
 import 'model/favoritos.dart';
@@ -29,6 +30,22 @@ class GalleryPage extends StatelessWidget {
     });
   }
 
+  _onImageSaveButtonPressed(String url) async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await FlutterDownloader.initialize(
+        debug: true // optional: set false to disable printing logs to console
+        );
+    final taskId = await FlutterDownloader.enqueue(
+      url: url,
+      savedDir: '/',
+      showNotification:
+          true, // show download progress in status bar (for Android)
+      openFileFromNotification:
+          true, // click on notification to open downloaded file (for Android)
+    );
+    print(taskId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,11 +55,18 @@ class GalleryPage extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.favorite),
-            tooltip: 'Search',
+            tooltip: 'Favoritar',
             onPressed: () {
               _postApi(url, id);
             },
           ),
+          // IconButton(
+          //   icon: Icon(Icons.download_sharp),
+          //   tooltip: 'Download',
+          //   onPressed: () {
+          //     _onImageSaveButtonPressed(url);
+          //   },
+          // ),
         ],
       ),
       backgroundColor: Colors.green[300],
