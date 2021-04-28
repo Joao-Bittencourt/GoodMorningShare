@@ -1,8 +1,12 @@
-// Pagina quando clica para abrir
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-
+import 'package:flutter/services.dart';
+import 'package:path/path.dart';
+import 'package:image_downloader/image_downloader.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
 import 'model/DatabaseHelper.dart';
 import 'model/favoritos.dart';
 
@@ -31,19 +35,22 @@ class GalleryPage extends StatelessWidget {
   }
 
   _onImageSaveButtonPressed(String url) async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await FlutterDownloader.initialize(
-        debug: true // optional: set false to disable printing logs to console
-        );
-    final taskId = await FlutterDownloader.enqueue(
-      url: url,
-      savedDir: '/',
-      showNotification:
-          true, // show download progress in status bar (for Android)
-      openFileFromNotification:
-          true, // click on notification to open downloaded file (for Android)
-    );
-    print(taskId);
+    try {
+      // Saved with this method.
+      var imageId = await ImageDownloader.downloadImage(url);
+      print(url);
+      print(imageId);
+      if (imageId == null) {
+        return;
+      }
+      // Below is a method of obtaining saved image information.
+      var fileName = await ImageDownloader.findName(imageId);
+      var path = await ImageDownloader.findPath(imageId);
+      var size = await ImageDownloader.findByteSize(imageId);
+      var mimeType = await ImageDownloader.findMimeType(imageId);
+    } on PlatformException catch (error) {
+      print(error);
+    }
   }
 
   @override
@@ -60,13 +67,13 @@ class GalleryPage extends StatelessWidget {
               _postApi(url, id);
             },
           ),
-          // IconButton(
-          //   icon: Icon(Icons.download_sharp),
-          //   tooltip: 'Download',
-          //   onPressed: () {
-          //     _onImageSaveButtonPressed(url);
-          //   },
-          // ),
+          IconButton(
+            icon: Icon(Icons.download_sharp),
+            tooltip: 'Download',
+            onPressed: () {
+              _onImageSaveButtonPressed(url);
+            },
+          ),
         ],
       ),
       backgroundColor: Colors.green[300],
